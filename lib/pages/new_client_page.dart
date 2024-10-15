@@ -1,3 +1,4 @@
+import 'package:client_management/widgets/app_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:client_management/services/client_service.dart';
 import 'package:client_management/models/client.dart';
@@ -37,24 +38,27 @@ class NewClientPageState extends State<NewClientPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('New Client')),
-      body: Form(
-        key: _formKey,
-        child: Column(
-          children: [
-            ProgressBar(
-              steps: _stepTitles,
-              currentStep: _currentStep,
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: _buildCurrentStep(),
+      appBar: const AppBarWidget(),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              ProgressBar(
+                steps: _stepTitles,
+                currentStep: _currentStep,
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: _buildCurrentStep(),
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(

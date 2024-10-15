@@ -33,13 +33,12 @@ class ClientManagementPageState extends State<ClientManagementPage> {
   List<Client> get _filteredClients {
     return _clients
         .where((client) =>
-        client.name.toLowerCase().contains(_searchQuery.toLowerCase()))
+            client.name.toLowerCase().contains(_searchQuery.toLowerCase()))
         .toList();
   }
 
   final ButtonStyle raisedButtonStyle = ElevatedButton.styleFrom(
     foregroundColor: Colors.white,
-
     textStyle: const TextStyle(fontWeight: FontWeight.bold),
     backgroundColor: const Color.fromRGBO(109, 39, 231, 1),
     shape: const RoundedRectangleBorder(
@@ -49,9 +48,8 @@ class ClientManagementPageState extends State<ClientManagementPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.fromLTRB(16, 30, 16, 30),
       child: Column(
         children: [
           Row(
@@ -64,8 +62,7 @@ class ClientManagementPageState extends State<ClientManagementPage> {
                       labelText: "Search Client",
                       focusColor: const Color.fromRGBO(109, 39, 231, 1),
                       border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0)
-                      ),
+                          borderRadius: BorderRadius.circular(8.0)),
                     ),
                     onChanged: (value) {
                       setState(() {
@@ -91,14 +88,26 @@ class ClientManagementPageState extends State<ClientManagementPage> {
                   child: Row(
                     children: [
                       const Icon(Icons.add),
-                      Text('New Client', style: GoogleFonts.poppins(
-                        letterSpacing: 1
-                      ),)
+                      Text(
+                        'New Client',
+                        style: GoogleFonts.poppins(letterSpacing: 1),
+                      )
                     ],
                   ),
                 ),
               ),
             ],
+          ),
+          const SizedBox(
+            height: 16.0,
+          ),
+          Text(
+            'Welcome Back!',
+            style: GoogleFonts.poppins(
+              letterSpacing: 1,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const SizedBox(height: 16.0),
           Expanded(
