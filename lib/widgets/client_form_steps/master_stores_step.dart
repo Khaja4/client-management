@@ -1,67 +1,81 @@
-import 'package:client_management/widgets/file_upload_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:client_management/widgets/file_upload_widget.dart';
 
 class MasterStoresStep extends StatelessWidget {
-  const MasterStoresStep({super.key});
+  final List<String> masterStores;
+  final Function(List<String>) onMasterStoresChanged;
+
+  const MasterStoresStep({
+    super.key,
+    required this.masterStores,
+    required this.onMasterStoresChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(24),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start, // Left-align items
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               'Master Stores',
-              style: GoogleFonts.poppins(
-                  textStyle: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 20),
-                  letterSpacing: 1),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Download Template',
-              style: GoogleFonts.poppins(
-                  textStyle: const TextStyle(fontWeight: FontWeight.w500),
-                  letterSpacing: 2),
-            ),
-            const SizedBox(height: 10),
-            Align(
-              alignment: Alignment.centerLeft, // Align button to the left
-              child: SizedBox(
-                height: 50,
-                child: ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      textStyle: const TextStyle(
-                          fontWeight: FontWeight.bold, letterSpacing: 1),
-                      backgroundColor: const Color.fromRGBO(109, 39, 231, 1),
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
-                      ),
-                    ),
-                    child: const Row(
-                        mainAxisSize: MainAxisSize
-                            .min, // Ensure the button is not stretched
-                        children: [
-                          Icon(Icons.download),
-                          Text('Download Template')
-                        ])),
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).primaryColor,
               ),
             ),
-            const SizedBox(height: 18),
+            const SizedBox(height: 16),
+            ElevatedButton.icon(
+              onPressed: () {
+                // TODO: Implement template download
+              },
+              icon: const Icon(Icons.download),
+              label: const Text('Download Template'),
+            ),
+            const SizedBox(height: 24),
             Text(
               'Project 1 - Purchase and sales_IN (India)',
-              style: GoogleFonts.poppins(
-                  textStyle: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 20),
-                  letterSpacing: 1),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            const SizedBox(height: 10),
-            const FileUploadWidget(),
+            const SizedBox(height: 16),
+            FileUploadWidget(
+              onFileUploaded: (String filePath) {
+                // TODO: Process the uploaded file and update masterStores
+                onMasterStoresChanged([...masterStores, filePath]);
+              },
+            ),
+            const SizedBox(height: 16),
+            if (masterStores.isNotEmpty) ...[
+              Text(
+                'Uploaded Files:',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: 8),
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: masterStores.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    leading: const Icon(Icons.file_present),
+                    title: Text(masterStores[index]),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: () {
+                        onMasterStoresChanged(
+                          masterStores.where((file) => file != masterStores[index]).toList(),
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
+            ],
           ],
         ),
       ),

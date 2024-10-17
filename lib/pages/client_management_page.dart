@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:client_management/pages/new_client_page.dart';
-import 'package:client_management/services/client_service.dart';
 import 'package:client_management/models/client.dart';
+import 'package:client_management/services/client_service.dart';
+import 'package:client_management/pages/new_client_page.dart';
 
-import 'package:google_fonts/google_fonts.dart';
+import '../widgets/client_list_items.dart';
 
 class ClientManagementPage extends StatefulWidget {
   const ClientManagementPage({super.key});
 
   @override
-  ClientManagementPageState createState() => ClientManagementPageState();
+  _ClientManagementPageState createState() => _ClientManagementPageState();
 }
 
-class ClientManagementPageState extends State<ClientManagementPage> {
+class _ClientManagementPageState extends State<ClientManagementPage> {
   final ClientService _clientService = ClientService();
   List<Client> _clients = [];
   String _searchQuery = '';
@@ -23,7 +23,7 @@ class ClientManagementPageState extends State<ClientManagementPage> {
     _loadClients();
   }
 
-  void _loadClients() async {
+  Future<void> _loadClients() async {
     final clients = await _clientService.getClients();
     setState(() {
       _clients = clients;
@@ -37,96 +37,112 @@ class ClientManagementPageState extends State<ClientManagementPage> {
         .toList();
   }
 
-  final ButtonStyle raisedButtonStyle = ElevatedButton.styleFrom(
-    foregroundColor: Colors.white,
-    textStyle: const TextStyle(fontWeight: FontWeight.bold),
-    backgroundColor: const Color.fromRGBO(109, 39, 231, 1),
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(12)),
-    ),
-  );
-
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 30, 16, 30),
+      padding: const EdgeInsets.all(16),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: SizedBox(
-                  height: 50,
-                  child: TextField(
-                    decoration: InputDecoration(
-                      labelText: "Search Client",
-                      focusColor: const Color.fromRGBO(109, 39, 231, 1),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0)),
-                    ),
-                    onChanged: (value) {
-                      setState(() {
-                        _searchQuery = value;
-                      });
-                    },
-                  ),
-                ),
-              ),
-              const SizedBox(width: 16.0),
-              SizedBox(
-                height: 49,
-                child: ElevatedButton(
-                  style: raisedButtonStyle,
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const NewClientPage(),
-                      ),
-                    );
-                  },
-                  child: Row(
-                    children: [
-                      const Icon(Icons.add),
-                      Text(
-                        'New Client',
-                        style: GoogleFonts.poppins(letterSpacing: 1),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 16.0,
-          ),
           Text(
             'Welcome Back!',
-            style: GoogleFonts.poppins(
-              letterSpacing: 1,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).primaryColor,
+                ),
           ),
-          const SizedBox(height: 16.0),
+          const SizedBox(height: 16),
+          _buildSearchAndAddSection(),
+          const SizedBox(height: 24),
           Expanded(
-            child: ListView.builder(
-              itemCount: _filteredClients.length,
-              itemBuilder: (context, index) {
-                final client = _filteredClients[index];
-                return Card(
-                  child: ListTile(
-                    title: Text(client.name),
-                    subtitle: Text(client.email),
-                    trailing: Text(client.phoneNumber),
-                  ),
-                );
-              },
-            ),
+            child: _filteredClients.isEmpty
+                ? _buildEmptyState()
+                : _buildClientList(),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildSearchAndAddSection() {
+    return Row(
+      children: [
+        Expanded(
+          child: TextField(
+            decoration: InputDecoration(
+              hintText: 'Search clients',
+              prefixIcon: const Icon(Icons.search),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            onChanged: (value) {
+              setState(() {
+                _searchQuery = value;
+              });
+            },
+          ),
+        ),
+        const SizedBox(width: 16),
+        SizedBox(
+          height: 50,
+          child: ElevatedButton.icon(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const NewClientPage()),
+              ).then((_) => _loadClients());
+            },
+            icon: const Icon(Icons.add),
+            label: const Text('New Client'),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.people_outline,
+            size: 64,
+            color: Theme.of(context).primaryColor.withOpacity(0.5),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'No clients found',
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  color: Theme.of(context).primaryColor,
+                ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Add a new client to get started',
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: Colors.grey[600],
+                ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildClientList() {
+    return ListView.separated(
+      itemCount: _filteredClients.length,
+      separatorBuilder: (context, index) => const SizedBox(height: 8),
+      itemBuilder: (context, index) {
+        final client = _filteredClients[index];
+        return ClientListItem(
+          client: client,
+          onTap: () {
+            // TODO: Implement client details page navigation
+          },
+        );
+      },
     );
   }
 }
