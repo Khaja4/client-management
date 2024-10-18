@@ -14,7 +14,7 @@ class SummaryStep extends StatelessWidget {
   final Map<String, double> kpis;
 
   const SummaryStep({
-    Key? key,
+    super.key,
     required this.name,
     required this.email,
     required this.phoneNumber,
@@ -26,7 +26,7 @@ class SummaryStep extends StatelessWidget {
     required this.masterStores,
     required this.skus,
     required this.kpis,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -41,9 +41,9 @@ class SummaryStep extends StatelessWidget {
             Text(
               'Summary',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).primaryColor,
-              ),
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).primaryColor,
+                  ),
             ),
             const SizedBox(height: 16),
             _buildSummaryItem('Name', name),
@@ -51,8 +51,10 @@ class SummaryStep extends StatelessWidget {
             _buildSummaryItem('Phone', phoneNumber),
             _buildSummaryItem('Agent', agent),
             _buildSummaryItem('Location', location),
-            _buildSummaryItem('Required Image', requiredImage ?? 'Not provided'),
-            _buildSummaryItem('Optional Image', optionalImage ?? 'Not provided'),
+            _buildSummaryItem(
+                'Required Image', requiredImage ?? 'Not provided'),
+            _buildSummaryItem(
+                'Optional Image', optionalImage ?? 'Not provided'),
             _buildSummaryList('Projects', projects),
             _buildSummaryList('Master Stores', masterStores),
             _buildSummaryList('SKUs', skus),

@@ -1,18 +1,24 @@
 name: client_management
 description: "A new Flutter project."
 
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 version: 1.0.0+1
 
 environment:
   sdk: ^3.5.3
 
-
 dependencies:
   google_fonts: ^6.2.1
   file_picker: ^5.0.0
+  excel: ^4.0.6
+  path_provider: ^2.1.4
+  permission_handler: ^11.3.1
+  flutter_file_saver: 0.6.2
   flutter_svg: ^1.0.0
+  html: ^0.15.4
+  universal_html: ^2.0.8
+  path: 1.9.0
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.8
@@ -24,3 +30,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/MasterStoresTemplate.xlsx

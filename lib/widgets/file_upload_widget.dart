@@ -4,7 +4,7 @@ import 'package:file_picker/file_picker.dart';
 class FileUploadWidget extends StatefulWidget {
   final Function(String) onFileUploaded;
 
-  const FileUploadWidget({Key? key, required this.onFileUploaded}) : super(key: key);
+  const FileUploadWidget({super.key, required this.onFileUploaded});
 
   @override
   _FileUploadWidgetState createState() => _FileUploadWidgetState();

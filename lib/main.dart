@@ -1,3 +1,4 @@
+import 'package:client_management/pages/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:client_management/pages/home_page.dart';
@@ -42,7 +43,7 @@ class ClientManagementApp extends StatelessWidget {
           fillColor: Colors.white,
         ),
       ),
-      home: const HomePage(),
+      home: LoginPage(),
     );
   }
 }
